@@ -23,6 +23,8 @@ def process_html(file: InMemoryUploadedFile) -> str:
 
 
 def process_url(url: str) -> str:
+    if not url.startswith(('https://', 'http://')):
+        raise ValueError
     if not requests.get(url).status_code == 200:
         raise URLFetchingError
 

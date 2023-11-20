@@ -47,6 +47,12 @@ class UrlToPdfApi(APIView):
                     "data": {"pdf_url": f"{request.get_host()}{path}"},
                 },
             )
+        except ValueError:
+            return Response(
+                {
+                    "detail": "Ошибка, url должен начинаться с 'https://' или 'http://', исправьте url и повторите попытку"
+                }
+            )
         except URLFetchingError:
             return Response({"detail": "Ошибка, проверьте указанный url и повторите попытку"})
         except Exception:
