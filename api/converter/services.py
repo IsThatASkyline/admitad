@@ -1,4 +1,5 @@
 import uuid
+from pathlib import Path
 
 from django.conf import settings
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -12,6 +13,7 @@ def process_html(file: InMemoryUploadedFile) -> str:
 
     name = uuid.uuid4()
     pdf_path = f"{settings.MEDIA_ROOT}/{name}.pdf"
+    Path(f"{settings.MEDIA_ROOT}").mkdir(parents=True, exist_ok=True)
     byte_str = file.file.getvalue()
     text_obj = byte_str.decode("UTF-8")
     tasks.process_html.delay(text_obj, pdf_path)
@@ -21,5 +23,6 @@ def process_html(file: InMemoryUploadedFile) -> str:
 def process_url(url: str) -> str:
     name = uuid.uuid4()
     pdf_path = f"{settings.MEDIA_ROOT}/{name}.pdf"
+    Path(f"{settings.MEDIA_ROOT}").mkdir(parents=True, exist_ok=True)
     tasks.process_url.delay(url, pdf_path)
     return f"{settings.MEDIA_URL}{name}.pdf"
