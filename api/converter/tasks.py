@@ -1,15 +1,12 @@
-import pathlib
+from weasyprint import HTML
 
 from mysite.celery_app import app
-from weasyprint import HTML
 
 
 @app.task
-def process_html(html_path: str, pdf_path: str):
-    file = HTML(html_path)
+def process_html(html: str, pdf_path: str):
+    file = HTML(string=str(html))
     file.write_pdf(target=pdf_path)
-    file = pathlib.Path(html_path)
-    file.unlink()
 
 
 @app.task
